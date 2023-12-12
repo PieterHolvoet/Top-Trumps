@@ -5,15 +5,22 @@ import random
 
 pygame.init()
 
+FPS = 60
+
 # Set up display
 width, height = 800, 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
+black = (0, 0, 0)
 white = (255, 255, 255)
 green = (0, 255, 0)
 red = (255, 0, 0)
+kleur1 = (244, 247, 190)
+kleur2 = (229, 247, 125)
+kleur3 = (222, 186, 111)
+kleur4 = (130, 48, 56)
 
 arrow_image = pygame.Surface((50, 100), pygame.SRCALPHA)
 pygame.draw.polygon(arrow_image, white, [(25, 0), (0, 100), (50, 100)])
@@ -106,21 +113,29 @@ def display_card(card, left):
     screen.blit(name_text, (x, text_y))
     text_y += 50
 
+    button1 = Button(2, text_y-12, 46, 46, "", kleur1, white)
+    button1.draw()
     attribute_text = f"{attr1}: {card.attr1_waarde}"
     attribute_surface = font.render(attribute_text, True, (255, 255, 255))
     screen.blit(attribute_surface, (x, text_y))
     text_y += 50
 
+    button2 = Button(2, text_y-12, 46, 46, "",kleur2, white)
+    button2.draw()
     attribute_text = f"{attr2}: {card.attr2_waarde}"
     attribute_surface = font.render(attribute_text, True, (255, 255, 255))
     screen.blit(attribute_surface, (x, text_y))
     text_y += 50
 
+    button3 = Button(2, text_y-12, 46, 46, "",kleur3, white)
+    button3.draw()
     attribute_text = f"{attr3}: {card.attr3_waarde}"
     attribute_surface = font.render(attribute_text, True, (255, 255, 255))
     screen.blit(attribute_surface, (x, text_y))
     text_y += 50
 
+    button4 = Button(2, text_y-12, 46, 46, "",kleur4, white)
+    button4.draw()
     attribute_text = f"{attr4}: {card.attr4_waarde}"
     attribute_surface = font.render(attribute_text, True, (255, 255, 255))
     screen.blit(attribute_surface, (x, text_y))
@@ -128,17 +143,22 @@ def display_card(card, left):
 
 
 class Button:
-    def __init__(self, x, y, width, height, text, action):
+    def __init__(self, x, y, width, height, text, background_color, text_color):
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
-        self.action = action
+        self.background_color = background_color
+        self.text_color = text_color
+
 
     def draw(self):
-        pygame.draw.rect(screen, WHITE, self.rect)
+        pygame.draw.rect(screen, self.background_color, self.rect)
         font = pygame.font.Font(None, 36)
-        text = font.render(self.text, True, BLACK)
+        text = font.render(self.text, True, self.text_color)
         text_rect = text.get_rect(center=self.rect.center)
         screen.blit(text, text_rect)
+
+    def get_coords(self):
+        return self.rect.x, self.rect.y, self.rect.width, self.rect.height
 
 
 class Player:
@@ -210,7 +230,6 @@ class Player:
             return False
 
 
-
 def tekenArrow(arrow_color, rotation_angle):
     rotated_arrow = pygame.transform.rotate(arrow_image, rotation_angle)
     rotated_arrow.fill(arrow_color, None, pygame.BLEND_MULT)
@@ -220,7 +239,7 @@ def tekenArrow(arrow_color, rotation_angle):
 
 def get_selected_number():
     selected_number = None
-
+    button_zijde = 46
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -237,7 +256,16 @@ def get_selected_number():
                     selected_number = 3
                 elif event.key == pygame.K_4:
                     selected_number = 4
-
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if 2 <= mouse_x <= 2 + button_zijde and 350 <= mouse_y <= 350 + button_zijde:
+                    selected_number = 1
+                if 2 <= mouse_x <= 2 + button_zijde and 400 <= mouse_y <= 400 + button_zijde:
+                    selected_number = 2
+                if 2 <= mouse_x <= 2 + button_zijde and 450 <= mouse_y <= 450 + button_zijde:
+                    selected_number = 3
+                if 2 <= mouse_x <= 2 + button_zijde and 500 <= mouse_y <= 500 + button_zijde:
+                    selected_number = 4
         # If a number is selected, break out of the loop and return the value
         if selected_number is not None:
             print(selected_number)
@@ -251,23 +279,18 @@ deck2 = []
 for i in range(15):
     deck1.append(deck_dieren_excel[i])
     deck2.append(deck_dieren_excel[i + 15])
-player = Player("Player", deck1)
-com = Player("COM", deck2)
+player = Player(deck1)
+com = Player(deck2)
 
 example_card = deck_dieren_excel[0]
 
-WIDTH, HEIGHT = 800, 600
-FPS = 60
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
 # Create the screen
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Top Trumps Game")
 
 # Load background image (replace 'background.jpg' with your image file)
 background = pygame.image.load('fotos/TopTrumpsStartLogo.png')
-background = pygame.transform.scale(background, (WIDTH - 80, HEIGHT - 80))
+background = pygame.transform.scale(background, (width - 80, height - 80))
 
 # Fonts
 font = pygame.font.Font(None, 36)
@@ -280,6 +303,8 @@ def draw_text(text, font, color, x, y):
 
 
 def start_screen():
+    buttonStart = Button(width // 2 - 30, height - 50, 80, 30, "Start", white, black)
+    x, y, button_width, button_height = buttonStart.get_coords()
     running = True
     while running:
         for event in pygame.event.get():
@@ -289,13 +314,16 @@ def start_screen():
                 if event.key == pygame.K_RETURN:
                     running = False
                     game_loop()  # Call the game loop function when Enter key is pressed
-
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if x <= mouse_x <= x + button_width and y <= mouse_y <= y + button_height:
+                    running = False
+                    game_loop()
         # Draw background
         screen.blit(background, (30, 0))
 
-        # Draw instructions
-        draw_text("Press Enter to start", font, WHITE, WIDTH // 2, HEIGHT - 30)
-
+        # draw_text("Press Enter to start", font, white, width // 2, height - 30)
+        buttonStart.draw()
         # Update the display
         pygame.display.flip()
 
@@ -318,8 +346,7 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren):
                 if button_x <= mouse_x <= button_x + button_width and button_y <= mouse_y <= button_y + button_height:
                     running = False
 
-        # Fill the screen with white
-        screen.fill(BLACK)
+        screen.fill(black)
         display_card(player_kaart, True)
         display_card(com_kaart, False)
         # Draw the button

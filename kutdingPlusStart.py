@@ -8,7 +8,7 @@ pygame.init()
 # Set up display
 width, height = 800, 600
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("TestFase5")
+pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
 white = (255, 255, 255)
@@ -61,6 +61,7 @@ with open('Dieren_TopTrumps.csv', 'r') as csv_bestand:
     for rij in csv_lezer:
         dier = Kaart(rij[0], float(rij[1]), float(rij[2]), float(rij[3]), float(rij[4]), 'fotos/leeuwen.jpg')
         deck_dieren_excel.append(dier)
+
 sorted_attr1 = []
 sorted_attr2 = []
 sorted_attr3 = []
@@ -141,8 +142,7 @@ class Button:
 
 
 class Player:
-    def __init__(self, naam, deck):
-        self.naam = naam
+    def __init__(self, deck):
         self.deck = deck
 
     def pak_bovenste_kaart(self):
@@ -207,12 +207,8 @@ class Player:
         if self.deck and other.deck:
             return True
         else:
-
             return False
 
-
-def getNumber(number):
-    return number
 
 
 def tekenArrow(arrow_color, rotation_angle):

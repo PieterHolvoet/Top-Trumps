@@ -2,13 +2,14 @@ import csv
 import sys
 import pygame
 import random
+import math
 
 pygame.init()
 
 FPS = 60
 
 # Set up display
-width, height = 800, 600
+width, height = 850, 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
@@ -17,10 +18,12 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 green = (0, 255, 0)
 red = (255, 0, 0)
+
 kleur1 = (244, 247, 190)
 kleur2 = (229, 247, 125)
 kleur3 = (222, 186, 111)
 kleur4 = (130, 48, 56)
+benazwart = (43, 43, 43)
 
 arrow_image = pygame.Surface((50, 100), pygame.SRCALPHA)
 pygame.draw.polygon(arrow_image, white, [(25, 0), (0, 100), (50, 100)])
@@ -113,28 +116,28 @@ def display_card(card, left):
     screen.blit(name_text, (x, text_y))
     text_y += 50
 
-    button1 = Button(2, text_y-12, 46, 46, "", kleur1, white)
+    button1 = Button(2, text_y - 12, 46, 46, "", kleur1, white)
     button1.draw()
     attribute_text = f"{attr1}: {card.attr1_waarde}"
     attribute_surface = font.render(attribute_text, True, (255, 255, 255))
     screen.blit(attribute_surface, (x, text_y))
     text_y += 50
 
-    button2 = Button(2, text_y-12, 46, 46, "",kleur2, white)
+    button2 = Button(2, text_y - 12, 46, 46, "", kleur2, white)
     button2.draw()
     attribute_text = f"{attr2}: {card.attr2_waarde}"
     attribute_surface = font.render(attribute_text, True, (255, 255, 255))
     screen.blit(attribute_surface, (x, text_y))
     text_y += 50
 
-    button3 = Button(2, text_y-12, 46, 46, "",kleur3, white)
+    button3 = Button(2, text_y - 12, 46, 46, "", kleur3, white)
     button3.draw()
     attribute_text = f"{attr3}: {card.attr3_waarde}"
     attribute_surface = font.render(attribute_text, True, (255, 255, 255))
     screen.blit(attribute_surface, (x, text_y))
     text_y += 50
 
-    button4 = Button(2, text_y-12, 46, 46, "",kleur4, white)
+    button4 = Button(2, text_y - 12, 46, 46, "", kleur4, white)
     button4.draw()
     attribute_text = f"{attr4}: {card.attr4_waarde}"
     attribute_surface = font.render(attribute_text, True, (255, 255, 255))
@@ -148,7 +151,6 @@ class Button:
         self.text = text
         self.background_color = background_color
         self.text_color = text_color
-
 
     def draw(self):
         pygame.draw.rect(screen, self.background_color, self.rect)
@@ -221,7 +223,6 @@ class Player:
                 print("Player is gewonnen")
                 print(f"PlayerRes: {len(self.deck)}     ComRes:{len(other.deck)}")
                 return True
-        print("")
 
     def is_niet_einde(self, other):
         if self.deck and other.deck:
@@ -237,8 +238,9 @@ def tekenArrow(arrow_color, rotation_angle):
     screen.blit(rotated_arrow, arrow_rect)
 
 
-def get_selected_number():
+def get_selected_number(kaart, hoger_lager):
     selected_number = None
+    timer_seconds = 30
     button_zijde = 46
     while True:
         for event in pygame.event.get():
@@ -270,6 +272,30 @@ def get_selected_number():
         if selected_number is not None:
             print(selected_number)
             return selected_number
+        angle = 360 * (timer_seconds / 5)
+        screen.fill(black)
+
+        display_card(kaart, True)
+        # Draw the circle
+        pygame.draw.arc(screen, white, (width - 100, height - 100, 100, 100), math.radians(0), math.radians(angle), 5)
+
+        # Draw the timer text
+        timer_text = font.render(str(timer_seconds), True, white)
+        text_rect = timer_text.get_rect(center=(width - 50, height - 50))
+        screen.blit(timer_text, text_rect)
+
+        # Update the display
+        pygame.display.flip()
+
+        # Cap the frame rate
+        clock.tick(1)
+
+        # Update the timer
+        timer_seconds -= 1
+
+        # Check if the timer has reached 0
+        if timer_seconds < 0:
+            return rank_kaart_attr(kaart, hoger_lager)
 
 
 random.seed(42)
@@ -333,7 +359,7 @@ def start_screen():
 
 def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren):
     button_width, button_height = 150, 50
-    button_x, button_y = (width - button_width) // 2, (height - button_height) // 4
+    button_x, button_y = (width - button_width) // 2, (height - button_height) -5
 
     # Run the game loop
     running = True
@@ -350,7 +376,7 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren):
         display_card(player_kaart, True)
         display_card(com_kaart, False)
         # Draw the button
-        pygame.draw.rect(screen, white, (button_x, button_y, button_width, button_height))
+        pygame.draw.rect(screen, benazwart, (button_x, button_y, button_width, button_height))
         if gewonnen_verloren:
             button_text = font.render("Gewonnen", True, green)
         else:
@@ -360,6 +386,41 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren):
 
         # Update the display
         pygame.display.flip()
+
+
+def timer_clock(timer_seconds, kaart):
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Clear the screen
+        screen.fill(black)
+        display_card(kaart, True)
+        # Calculate the angle for the arc
+        angle = 360 * (timer_seconds / 5)
+
+        # Draw the circle
+        pygame.draw.arc(screen, white, (width - 100, height - 100, 100, 100), math.radians(0), math.radians(angle), 5)
+
+        # Draw the timer text
+        timer_text = font.render(str(timer_seconds), True, white)
+        text_rect = timer_text.get_rect(center=(width - 50, height - 50))
+        screen.blit(timer_text, text_rect)
+
+        # Update the display
+        pygame.display.flip()
+
+        # Cap the frame rate
+        clock.tick(1)
+
+        # Update the timer
+        timer_seconds -= 1
+
+        # Check if the timer has reached 0
+        if timer_seconds < 0:
+            running = False
 
 
 def game_loop():
@@ -392,7 +453,7 @@ def game_loop():
             print("VOOR TEST ===V")
             print(
                 f"{com_kaart.naam}::: {attr1}: {com_kaart.attr1_waarde}, {attr2}: {com_kaart.attr2_waarde}, {attr3}: {com_kaart.attr3_waarde}, {attr4}: {com_kaart.attr4_waarde}")
-            keuze = get_selected_number()
+            keuze = get_selected_number(player_kaart, hoger_lager)
             print(keuze)
             if player_kaart.isgelijk(com_kaart, keuze):
                 bonus_stapel.append(player_kaart)
@@ -439,6 +500,7 @@ def game_loop():
                     player.kaart_verwijderen_deck(player_kaart)
                     com.kaart_verwijderen_deck(com_kaart)
                     continue
+                timer_clock(5, player_kaart)
                 gewonnen = player.battle_andere_speler(com, keuze, bonus_stapel, hoger_lager)
                 won_lost_screen(player_kaart, com_kaart, gewonnen)
                 boolean = False

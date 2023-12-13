@@ -30,7 +30,7 @@ pygame.draw.polygon(arrow_image, white, [(25, 0), (0, 100), (50, 100)])
 
 rotation_angle = 0
 arrow_color = green
-font = pygame.font.Font(None, 36)
+font = pygame.font.Font('./fonts/Minecrafter.Reg.ttf', 20)
 
 
 class Kaart:
@@ -108,7 +108,6 @@ def display_card(card, left):
     else:
         x = 450
     screen.blit(card.imageCard, (x, 50))
-    font = pygame.font.Font(None, 36)
     text_y = 300
 
     # Display card name
@@ -154,7 +153,6 @@ class Button:
 
     def draw(self):
         pygame.draw.rect(screen, self.background_color, self.rect)
-        font = pygame.font.Font(None, 36)
         text = font.render(self.text, True, self.text_color)
         text_rect = text.get_rect(center=self.rect.center)
         screen.blit(text, text_rect)
@@ -319,7 +317,6 @@ background = pygame.image.load('fotos/TopTrumpsStartLogo.png')
 background = pygame.transform.scale(background, (width - 80, height - 80))
 
 # Fonts
-font = pygame.font.Font(None, 36)
 
 
 def draw_text(text, font, color, x, y):

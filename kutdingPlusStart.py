@@ -9,10 +9,20 @@ pygame.init()
 FPS = 60
 
 # Set up display
-width, height = 850, 600
+width, height = 800, 800
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
+
+game_bg = pygame.image.load('fotos/TTGame.jpg')
+game_bg = pygame.transform.scale(game_bg, (width + 80, height + 80))
+
+ttFront = pygame.image.load('fotos/TTFrontCard.jpg')
+ttFront = pygame.transform.scale(ttFront, (240, 320))
+
+ttBack = pygame.image.load('fotos/TTBackCard.jpg')
+ttBack = pygame.transform.rotate(ttBack, 180)
+ttBack = pygame.transform.scale(ttBack, (240, 320))
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -30,7 +40,7 @@ pygame.draw.polygon(arrow_image, white, [(25, 0), (0, 100), (50, 100)])
 
 rotation_angle = 0
 arrow_color = green
-font = pygame.font.Font('./fonts/Minecrafter.Reg.ttf', 20)
+font = pygame.font.Font('./fonts/MinecraftRegular-Bmg3.otf', 20)
 
 
 class Kaart:
@@ -102,46 +112,55 @@ def rank_kaart_attr(kaart, hoger_lager):
     return rank_list.index(wanted_rank) + 1
 
 
-def display_card(card, left):
-    if left:
-        x = 50
-    else:
-        x = 450
-    screen.blit(card.imageCard, (x, 50))
-    text_y = 300
+def display_card(card, player):
+    # if player:
+    #     x = 50
+    # else:
+    #     x = 450
+    screen.blit(game_bg, (-40, -55))
+    screen.blit(ttFront, ((width / 2) - (ttFront.get_width() / 2), height - ttFront.get_height()))
+    screen.blit(ttBack, ((width / 2) - (ttBack.get_width() / 2), 0))
 
-    # Display card name
     name_text = font.render(card.naam, True, (255, 255, 255))
-    screen.blit(name_text, (x, text_y))
-    text_y += 50
+    screen.blit(name_text, (screen.get_width() // 2 - (screen.get_width() // 10.666), screen.get_height() * 0.64))
+    attr_value = f"{card.attr1_waarde}"
+    attr_surface = font.render((attr_value), True, (255, 255, 255))
+    screen.blit(attr_surface, ((screen.get_width()//2)+(screen.get_width()//15), screen.get_height()*0.83))
 
-    button1 = Button(2, text_y - 12, 46, 46, "", kleur1, white)
-    button1.draw()
-    attribute_text = f"{attr1}: {card.attr1_waarde}"
-    attribute_surface = font.render(attribute_text, True, (255, 255, 255))
-    screen.blit(attribute_surface, (x, text_y))
-    text_y += 50
-
-    button2 = Button(2, text_y - 12, 46, 46, "", kleur2, white)
-    button2.draw()
-    attribute_text = f"{attr2}: {card.attr2_waarde}"
-    attribute_surface = font.render(attribute_text, True, (255, 255, 255))
-    screen.blit(attribute_surface, (x, text_y))
-    text_y += 50
-
-    button3 = Button(2, text_y - 12, 46, 46, "", kleur3, white)
-    button3.draw()
-    attribute_text = f"{attr3}: {card.attr3_waarde}"
-    attribute_surface = font.render(attribute_text, True, (255, 255, 255))
-    screen.blit(attribute_surface, (x, text_y))
-    text_y += 50
-
-    button4 = Button(2, text_y - 12, 46, 46, "", kleur4, white)
-    button4.draw()
-    attribute_text = f"{attr4}: {card.attr4_waarde}"
-    attribute_surface = font.render(attribute_text, True, (255, 255, 255))
-    screen.blit(attribute_surface, (x, text_y))
-    text_y += 50
+    # text_y = 300
+    #
+    # # Display card name
+    # name_text = font.render(card.naam, True, (255, 255, 255))
+    # screen.blit(name_text, (x, text_y))
+    # text_y += 50
+    #
+    # button1 = Button(2, text_y - 12, 46, 46, "", kleur1, white)
+    # button1.draw()
+    # attribute_text = f"{attr1}: {card.attr1_waarde}"
+    # attribute_surface = font.render(attribute_text, True, (255, 255, 255))
+    # screen.blit(attribute_surface, (x, text_y))
+    # text_y += 50
+    #
+    # button2 = Button(2, text_y - 12, 46, 46, "", kleur2, white)
+    # button2.draw()
+    # attribute_text = f"{attr2}: {card.attr2_waarde}"
+    # attribute_surface = font.render(attribute_text, True, (255, 255, 255))
+    # screen.blit(attribute_surface, (x, text_y))
+    # text_y += 50
+    #
+    # button3 = Button(2, text_y - 12, 46, 46, "", kleur3, white)
+    # button3.draw()
+    # attribute_text = f"{attr3}: {card.attr3_waarde}"
+    # attribute_surface = font.render(attribute_text, True, (255, 255, 255))
+    # screen.blit(attribute_surface, (x, text_y))
+    # text_y += 50
+    #
+    # button4 = Button(2, text_y - 12, 46, 46, "", kleur4, white)
+    # button4.draw()
+    # attribute_text = f"{attr4}: {card.attr4_waarde}"
+    # attribute_surface = font.render(attribute_text, True, (255, 255, 255))
+    # screen.blit(attribute_surface, (x, text_y))
+    # text_y += 50
 
 
 class Button:
@@ -164,6 +183,9 @@ class Button:
 class Player:
     def __init__(self, deck):
         self.deck = deck
+
+    def aantal_kaarten(self):
+        return len(self.deck)
 
     def pak_bovenste_kaart(self):
         kaart = self.deck[0]
@@ -316,6 +338,7 @@ pygame.display.set_caption("Top Trumps Game")
 background = pygame.image.load('fotos/TopTrumpsStartLogo.png')
 background = pygame.transform.scale(background, (width - 80, height - 80))
 
+
 # Fonts
 
 
@@ -356,7 +379,7 @@ def start_screen():
 
 def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren):
     button_width, button_height = 150, 50
-    button_x, button_y = (width - button_width) // 2, (height - button_height) -5
+    button_x, button_y = (width - button_width) // 2, (height - button_height) - 5
 
     # Run the game loop
     running = True
@@ -427,7 +450,7 @@ def game_loop():
         boolean = True
         while boolean:
             print("Player beurt")
-            screen.fill((0, 0, 0))  # Fill the screen with a black background
+            screen.blit(game_bg, (0, 0))  # Fill the screen with a black background
             pygame.display.flip()
             hoger_lager = (random.randint(1, 100) % 2 == 0)  # EVEN == HOGER
             if hoger_lager:

@@ -20,30 +20,6 @@ def connect_to_database():
         print("Error connecting to PostgreSQL database:", error)
         return None, None
 
-#def retrieve_data_from_table():
-    connection, cursor = connect_to_database()
-
-    if connection and cursor:
-        try:
-            # Execute a simple SELECT query on the 'opponent_choices' table
-            query = "SELECT * FROM opponent_choices;"
-            cursor.execute(query)
-
-            # Fetch all the results
-            records = cursor.fetchall()
-
-            # Display the results
-            for record in records:
-                print(record)
-
-        except (Exception, psycopg2.Error) as error:
-            print("Error retrieving data from the table:", error)
-
-        finally:
-            # Close the cursor and connection
-            cursor.close()
-            connection.close()
-            print("PostgreSQL connection is closed.")
 
 def call_stored_procedure():
     connection, cursor = connect_to_database()

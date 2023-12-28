@@ -27,7 +27,7 @@ def call_stored_procedure():
     if connection and cursor:
         try:
             # Execute a stored procedure
-            cursor.callproc('get_computer_choice', (1, 'Easy','Higher'))  # Replace with actual parameters
+            cursor.callproc('get_computer_choice', (6, 'Hard','Higher'))  # Replace with actual parameters
 
             # Fetch the results if the stored procedure returns any
             results = cursor.fetchall()

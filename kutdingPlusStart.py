@@ -9,20 +9,20 @@ pygame.init()
 FPS = 60
 
 # Set up display
-width, height = 800, 800
+width, height = 600, 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-game_bg = pygame.image.load('fotos/TTGame.jpg')
-game_bg = pygame.transform.scale(game_bg, (width + 80, height + 80))
+game_bg = pygame.image.load('fotos/New-img/background_topTrumps.JPG')
+game_bg = pygame.transform.scale(game_bg, (width, height))
 
 ttFront = pygame.image.load('fotos/TTFrontCard.jpg')
-ttFront = pygame.transform.scale(ttFront, (240, 320))
+ttFront = pygame.transform.scale(ttFront, (screen.get_width() // 3.333, screen.get_height() // 2.5))
 
 ttBack = pygame.image.load('fotos/TTBackCard.jpg')
 ttBack = pygame.transform.rotate(ttBack, 180)
-ttBack = pygame.transform.scale(ttBack, (240, 320))
+ttBack = pygame.transform.scale(ttBack, (screen.get_width() // 3.333, screen.get_height() // 2.5))
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -35,11 +35,6 @@ kleur3 = (222, 186, 111)
 kleur4 = (130, 48, 56)
 benazwart = (43, 43, 43)
 
-arrow_image = pygame.Surface((50, 100), pygame.SRCALPHA)
-pygame.draw.polygon(arrow_image, white, [(25, 0), (0, 100), (50, 100)])
-
-rotation_angle = 0
-arrow_color = green
 font = pygame.font.Font('./fonts/MinecraftRegular-Bmg3.otf', 20)
 
 
@@ -117,7 +112,7 @@ def display_card(card, player):
     #     x = 50
     # else:
     #     x = 450
-    screen.blit(game_bg, (-40, -55))
+    screen.blit(game_bg, (0, 0 - screen.get_height() * 0.02))
     screen.blit(ttFront, ((width / 2) - (ttFront.get_width() / 2), height - ttFront.get_height()))
     screen.blit(ttBack, ((width / 2) - (ttBack.get_width() / 2), 0))
 
@@ -125,7 +120,7 @@ def display_card(card, player):
     screen.blit(name_text, (screen.get_width() // 2 - (screen.get_width() // 10.666), screen.get_height() * 0.64))
     attr_value = f"{card.attr1_waarde}"
     attr_surface = font.render((attr_value), True, (255, 255, 255))
-    screen.blit(attr_surface, ((screen.get_width()//2)+(screen.get_width()//15), screen.get_height()*0.83))
+    screen.blit(attr_surface, ((screen.get_width() // 2) + (screen.get_width() // 15), screen.get_height() * 0.83))
 
     # text_y = 300
     #
@@ -161,6 +156,120 @@ def display_card(card, player):
     # attribute_surface = font.render(attribute_text, True, (255, 255, 255))
     # screen.blit(attribute_surface, (x, text_y))
     # text_y += 50
+
+
+#
+# import csv
+# import sys
+# import pygame
+# import random
+# import math
+#
+# pygame.init()
+#
+# FPS = 60
+#
+# # Set up display
+# width, height = 800, 800
+# screen = pygame.display.set_mode((width, height))
+# pygame.display.set_caption("Top Trumps")
+# clock = pygame.time.Clock()
+#
+# game_bg = pygame.image.load('fotos/TTGame.jpg')
+# game_bg = pygame.transform.scale(game_bg, (width + 80, height + 80))
+#
+# ttFront = pygame.image.load('fotos/TTFrontCard.jpg')
+# ttFront = pygame.transform.scale(ttFront, (240, 320))
+#
+# ttBack = pygame.image.load('fotos/TTBackCard.jpg')
+# ttBack = pygame.transform.rotate(ttBack, 180)
+# ttBack = pygame.transform.scale(ttBack, (240, 320))
+#
+# black = (0, 0, 0)
+# white = (255, 255, 255)
+# green = (0, 255, 0)
+# red = (255, 0, 0)
+#
+# kleur1 = (244, 247, 190)
+# kleur2 = (229, 247, 125)
+# kleur3 = (222, 186, 111)
+# kleur4 = (130, 48, 56)
+# benazwart = (43, 43, 43)
+#
+# font = pygame.font.Font('./fonts/MinecraftRegular-Bmg3.otf', 20)
+
+
+def game_loop():
+    while player.is_niet_einde(com):
+        clock.tick(60)
+        bonus_stapel = []
+        boolean = True
+        while boolean:
+            print("Player beurt")
+            screen.blit(game_bg, (0, 0))  # Fill the screen with a black background
+            pygame.display.flip()
+            hoger_lager = (random.randint(1, 100) % 2 == 0)  # EVEN == HOGER
+            if hoger_lager:
+                print("Deze Ronde is het hoger")
+                rotation_angle = 0
+                arrow_color = green
+            else:
+                print("Deze Ronde is het lager")
+                rotation_angle = 180
+                arrow_color = red
+            print()
+            player_kaart = player.pak_bovenste_kaart()
+            display_card(player_kaart, True)
+            com_kaart = com.pak_bovenste_kaart()
+            pygame.display.flip()
+
+            print(
+                f"{player_kaart.naam}::: {attr1}: {player_kaart.attr1_waarde}, {attr2}: {player_kaart.attr2_waarde}, {attr3}: {player_kaart.attr3_waarde}, {attr4}: {player_kaart.attr4_waarde}")
+            print("VOOR TEST ===V")
+            print(
+                f"{com_kaart.naam}::: {attr1}: {com_kaart.attr1_waarde}, {attr2}: {com_kaart.attr2_waarde}, {attr3}: {com_kaart.attr3_waarde}, {attr4}: {com_kaart.attr4_waarde}")
+            keuze = get_selected_number(player_kaart, hoger_lager)
+            print(keuze)
+            if player_kaart.isgelijk(com_kaart, keuze):
+                bonus_stapel.append(player_kaart)
+                bonus_stapel.append(com_kaart)
+                player.kaart_verwijderen_deck(player_kaart)
+                com.kaart_verwijderen_deck(com_kaart)
+                continue
+            gewonnen = player.battle_andere_speler(com, keuze, bonus_stapel, hoger_lager)
+            won_lost_screen(player_kaart, com_kaart, gewonnen)
+            boolean = False
+        bonus_stapel = []
+        boolean = True
+        if player.is_niet_einde(com):
+            while boolean:
+                print("Com Beurt")
+                screen.fill((0, 0, 0))  # Fill the screen with a black background
+                pygame.display.flip()
+                hoger_lager = (random.randint(1, 100) % 2 == 0)  # EVEN == HOGER
+                print()
+                player_kaart = player.pak_bovenste_kaart()
+                display_card(player_kaart, True)
+                com_kaart = com.pak_bovenste_kaart()
+                pygame.display.flip()
+
+                print(
+                    f"{player_kaart.naam}::: {attr1}: {player_kaart.attr1_waarde}, {attr2}: {player_kaart.attr2_waarde}, {attr3}: {player_kaart.attr3_waarde}, {attr4}: {player_kaart.attr4_waarde}")
+                print("VOOR TEST ===V")
+                print(
+                    f"{com_kaart.naam}::: {attr1}: {com_kaart.attr1_waarde}, {attr2}: {com_kaart.attr2_waarde}, {attr3}: {com_kaart.attr3_waarde}, {attr4}: {com_kaart.attr4_waarde}")
+                keuze = rank_kaart_attr(com_kaart, hoger_lager)
+                print(keuze)
+                if player_kaart.isgelijk(com_kaart, keuze):
+                    bonus_stapel.append(player_kaart)
+                    bonus_stapel.append(com_kaart)
+                    player.kaart_verwijderen_deck(player_kaart)
+                    com.kaart_verwijderen_deck(com_kaart)
+                    continue
+                timer_clock(5, player_kaart)
+                gewonnen = player.battle_andere_speler(com, keuze, bonus_stapel, hoger_lager)
+                won_lost_screen(player_kaart, com_kaart, gewonnen)
+                boolean = False
 
 
 class Button:
@@ -251,13 +360,6 @@ class Player:
             return False
 
 
-def tekenArrow(arrow_color, rotation_angle):
-    rotated_arrow = pygame.transform.rotate(arrow_image, rotation_angle)
-    rotated_arrow.fill(arrow_color, None, pygame.BLEND_MULT)
-    arrow_rect = rotated_arrow.get_rect(center=(width - 50, height // 2))
-    screen.blit(rotated_arrow, arrow_rect)
-
-
 def get_selected_number(kaart, hoger_lager):
     selected_number = None
     timer_seconds = 30
@@ -335,8 +437,8 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Top Trumps Game")
 
 # Load background image (replace 'background.jpg' with your image file)
-background = pygame.image.load('fotos/TopTrumpsStartLogo.png')
-background = pygame.transform.scale(background, (width - 80, height - 80))
+background = pygame.image.load('fotos/start_screen.jpg')
+background = pygame.transform.scale(background, (width, height))
 
 
 # Fonts
@@ -349,8 +451,8 @@ def draw_text(text, font, color, x, y):
 
 
 def start_screen():
-    buttonStart = Button(width // 2 - 30, height - 50, 80, 30, "Start", white, black)
-    x, y, button_width, button_height = buttonStart.get_coords()
+    x1, x2 = screen.get_width() // 2.8, screen.get_width() // 1.5
+    y1, y2 = screen.get_height() // 1.5625, screen.get_height() // 1.4
     running = True
     while running:
         for event in pygame.event.get():
@@ -362,14 +464,15 @@ def start_screen():
                     game_loop()  # Call the game loop function when Enter key is pressed
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                if x <= mouse_x <= x + button_width and y <= mouse_y <= y + button_height:
+                print(mouse_x)
+                print(mouse_y)
+                print()
+                if x1 <= mouse_x <= x2 and y1 <= mouse_y <= y2:
                     running = False
                     game_loop()
         # Draw background
-        screen.blit(background, (30, 0))
+        screen.blit(background, (0, 0))
 
-        # draw_text("Press Enter to start", font, white, width // 2, height - 30)
-        buttonStart.draw()
         # Update the display
         pygame.display.flip()
 
@@ -422,11 +525,11 @@ def timer_clock(timer_seconds, kaart):
         angle = 360 * (timer_seconds / 5)
 
         # Draw the circle
-        pygame.draw.arc(screen, white, (width - 100, height - 100, 100, 100), math.radians(0), math.radians(angle), 5)
+        pygame.draw.arc(screen, white, (screen.get_width()//2, screen.get_height()//2, 100, 100), math.radians(0), math.radians(angle), 5)
 
         # Draw the timer text
         timer_text = font.render(str(timer_seconds), True, white)
-        text_rect = timer_text.get_rect(center=(width - 50, height - 50))
+        text_rect = timer_text.get_rect(center=(width //2, height //2))
         screen.blit(timer_text, text_rect)
 
         # Update the display
@@ -462,7 +565,6 @@ def game_loop():
                 rotation_angle = 180
                 arrow_color = red
             print()
-            tekenArrow(arrow_color, rotation_angle)
             player_kaart = player.pak_bovenste_kaart()
             display_card(player_kaart, True)
             com_kaart = com.pak_bovenste_kaart()
@@ -501,7 +603,6 @@ def game_loop():
                     rotation_angle = 180
                     arrow_color = red
                 print()
-                tekenArrow(arrow_color, rotation_angle)
                 player_kaart = player.pak_bovenste_kaart()
                 display_card(player_kaart, True)
                 com_kaart = com.pak_bovenste_kaart()

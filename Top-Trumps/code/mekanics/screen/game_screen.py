@@ -2,19 +2,21 @@ import pygame
 
 pygame.init()
 
-# Minecraft Font :)
-FONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', 20)
-MEDIUMFONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', 46)
-GROOTFONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', 80)
 FPS = 60
 WIDTH = 800
 HEIGHT = 800
+
+# Minecraft Font :)
+FONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', int(WIDTH // 40))
+MEDIUMFONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', int(WIDTH // 17.4))
+GROOTFONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', int(WIDTH // 10))
 
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
 
 # Set up display
 
@@ -37,14 +39,14 @@ ttBack = pygame.transform.scale(ttBack, (WIDTH // 3.333, HEIGHT // 2.5))
 
 
 def display_in_a_match(card, hoger_lager):
-    x1, x2 = 395, 495
-    ylist = [689, 716, 741, 771]
+    x1, x2 = WIDTH // 2.025, WIDTH // 1.616
+    ylist = [HEIGHT // 1.161, HEIGHT // 1.117, HEIGHT // 1.0796, HEIGHT // 1.0376]
     screen.blit(background, (0, 0 - HEIGHT * 0.02))
-    screen.blit(ttFront, ((WIDTH / 2) - (ttFront.get_width() / 2), HEIGHT - ttFront.get_height()))
-    screen.blit(ttBack, ((WIDTH / 2) - (ttBack.get_width() / 2), 0))
+    screen.blit(ttFront, ((WIDTH // 2) - (ttFront.get_width() // 2), HEIGHT - ttFront.get_height()))
+    screen.blit(ttBack, ((WIDTH // 2) - (ttBack.get_width() // 2), 0))
     image = pygame.image.load(f".././fotos/dieren/{card.naam}.JPG")
     image = pygame.transform.scale(image, (WIDTH // 4.4, HEIGHT // 6.7))
-    screen.blit(image, (313, 540))
+    screen.blit(image, (WIDTH // 2.556, HEIGHT // 1.48))
     for y in ylist:
         pygame.draw.line(screen, WHITE, (x1, y), (x2, y))
 
@@ -61,8 +63,9 @@ def display_in_a_match(card, hoger_lager):
     for i in range(4):
         attr_value = f"{card.attr_list[i]}"
         attr_surface = FONT.render(attr_value, True, WHITE)
+        x_offset = len(attr_value) * WIDTH // 72.727
         screen.blit(attr_surface,
-                    ((WIDTH // 2) + (WIDTH // 15), HEIGHT * (0.83 + (i * 0.035))))
+                    ((WIDTH // 2) + (WIDTH // 8) - x_offset, HEIGHT * (0.83 + (i * 0.035))))
     pygame.display.flip()
 
 
@@ -72,7 +75,7 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren, player_aantal, c
     com_kaarten = f"{com_aantal}"
     keuze = f"{choice}"
     display_in_a_match(player_kaart, hoger_lager)
-    x1, x2, y1, y2 = 250, 550, 330, 470
+    x1, x2, y1, y2 = WIDTH // 3.2, WIDTH // 1.454, HEIGHT // 2.424, HEIGHT // 1.7
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -90,28 +93,32 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren, player_aantal, c
         screen.blit(name_text, (WIDTH // 2 - (WIDTH // 10.666), HEIGHT * 0.04))
         image = pygame.image.load(f".././fotos/dieren/{com_kaart.naam}.JPG")
         image = pygame.transform.scale(image, (WIDTH // 4.4, HEIGHT // 6.7))
-        screen.blit(image, (313, 55))
+        screen.blit(image, (WIDTH // 2.556, HEIGHT // 14.545))
         for i in range(4):
             attr_value = f"{com_kaart.attr_list[i]}"
+            x_offset = len(attr_value) * WIDTH // 72.727
             attr_surface = FONT.render(attr_value, True, WHITE)
             screen.blit(attr_surface,
-                        ((WIDTH // 2) + (WIDTH // 15), HEIGHT * (0.23 + (i * 0.035))))
+                        ((WIDTH // 2) + (WIDTH // 8) - x_offset, HEIGHT * (0.23 + (i * 0.035))))
 
-        if gewonnen_verloren:
+        if gewonnen_verloren == 1:
             gewonnen_verloren_txt = "Gewonnen"
             gewonnen_verloren_txt = MEDIUMFONT.render(gewonnen_verloren_txt, True, GREEN)
-        else:
+        elif gewonnen_verloren == -1:
             gewonnen_verloren_txt = "Verloren"
             gewonnen_verloren_txt = MEDIUMFONT.render(gewonnen_verloren_txt, True, RED)
+        else:
+            gewonnen_verloren_txt = "Gelijk"
+            gewonnen_verloren_txt = MEDIUMFONT.render(gewonnen_verloren_txt, True, YELLOW)
         next = GROOTFONT.render("Verder", True, WHITE)
-        screen.blit(next, (WIDTH // 2 - 130, HEIGHT // 2 - 40))
+        screen.blit(next, (WIDTH // 2 - WIDTH // 6.145, HEIGHT // 2 - HEIGHT // 20))
         screen.blit(gewonnen_verloren_txt, (WIDTH * 0.72, HEIGHT * 0.01))
         player_aantal = FONT.render(player_kaarten, True, WHITE)
         com_aantal = FONT.render(com_kaarten, True, WHITE)
         screen.blit(com_aantal, ((WIDTH // 2) + (WIDTH // 15), HEIGHT * 0.025))
         screen.blit(player_aantal, ((WIDTH // 2) + (WIDTH // 15), HEIGHT * 0.625))
         keuzeTekst = GROOTFONT.render(keuze, True, WHITE)
-        screen.blit(keuzeTekst, (WIDTH * 0.86, HEIGHT // 2 - 40))
+        screen.blit(keuzeTekst, (WIDTH * 0.86, HEIGHT // 2 - HEIGHT // 20))
         pygame.display.flip()
 
 

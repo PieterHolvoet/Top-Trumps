@@ -7,11 +7,13 @@ import screen.game_screen as screen
 import card.kaart as card
 import pl.player as pl
 
-FONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', 20)
-GROOTFONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', 80)
 FPS = 60
 WIDTH = 800
 HEIGHT = 800
+
+
+FONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', int(WIDTH//40))
+GROOTFONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', int(WIDTH//10))
 
 # Colors
 BLACK = (0, 0, 0)
@@ -57,8 +59,8 @@ def start_screen():
 def get_selected_number(kaart, hoger_lager):
     selected_number = None
     timer_seconds = 30
-    x1, x2 = 300, 495
-    y1, y2, y3, y4, y5 = 660, 689, 716, 741, 771
+    x1, x2 = WIDTH//2.666, WIDTH//1.616
+    y1, y2, y3, y4, y5 = HEIGHT//1.212, HEIGHT//1.161, HEIGHT//1.117, HEIGHT//1.0796, HEIGHT//1.0376
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -119,6 +121,7 @@ with open('.././Dieren_TopTrumps.csv', 'r') as csv_bestand:
         attr_lijst = [float(rij[1]), float(rij[2]), float(rij[3]), float(rij[4])]
         dier = card.Kaart(rij[0], attr_lijst)
         DECK_DIEREN_CSV.append(dier)
+random.seed(101)
 random.shuffle(DECK_DIEREN_CSV)
 deck1 = []
 deck2 = []
@@ -144,6 +147,7 @@ def game_loop():
                 bonus_stapel.append(com_kaart)
                 player.kaart_verwijderen_deck(player_kaart)
                 com.kaart_verwijderen_deck(com_kaart)
+                screen.won_lost_screen(player_kaart, com_kaart, 0, len(player.deck), len(com.deck), hoger_lager, keuze)
                 continue
             gewonnen = player.battle_andere_speler(com, keuze, bonus_stapel, hoger_lager)
             screen.won_lost_screen(player_kaart, com_kaart, gewonnen, len(player.deck), len(com.deck), hoger_lager, keuze)
@@ -162,6 +166,7 @@ def game_loop():
                     bonus_stapel.append(com_kaart)
                     player.kaart_verwijderen_deck(player_kaart)
                     com.kaart_verwijderen_deck(com_kaart)
+                    screen.won_lost_screen(player_kaart, com_kaart, 0, len(player.deck), len(com.deck), hoger_lager, keuze)
                     continue
                 screen.timer_clock(5, player_kaart, hoger_lager)
                 gewonnen = player.battle_andere_speler(com, keuze, bonus_stapel, hoger_lager)

@@ -32,7 +32,7 @@ class Player:
                 self.bonus_krijgen(bonus)
                 print("Player is gewonnen")
                 print(f"PlayerRes: {len(self.deck)}     ComRes:{len(other.deck)}")
-                return True
+                return 1
             else:
                 self.kaart_verwijderen_deck(eigen_kaart)
                 other.kaart_verwijderen_deck(andere_kaart)
@@ -41,7 +41,7 @@ class Player:
                 other.bonus_krijgen(bonus)
                 print("Com is gewonnen")
                 print(f"PlayerRes: {len(self.deck)}     ComRes:{len(other.deck)}")
-                return False
+                return -1
         else:
             if eigen_kaart.isgroter(andere_kaart, attr):
                 self.kaart_verwijderen_deck(eigen_kaart)
@@ -51,7 +51,7 @@ class Player:
                 other.bonus_krijgen(bonus)
                 print("Com is gewonnen")
                 print(f"PlayerRes: {len(self.deck)}     ComRes:{len(other.deck)}")
-                return False
+                return -1
             else:
                 self.kaart_verwijderen_deck(eigen_kaart)
                 self.kaart_toevoegen_deck(eigen_kaart)
@@ -60,7 +60,7 @@ class Player:
                 self.bonus_krijgen(bonus)
                 print("Player is gewonnen")
                 print(f"PlayerRes: {len(self.deck)}     ComRes:{len(other.deck)}")
-                return True
+                return 1
 
     def is_niet_einde(self, other):
         if self.deck and other.deck:

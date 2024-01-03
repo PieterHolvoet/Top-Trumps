@@ -21,17 +21,23 @@ def connect_to_database():
         return None, None
 
 
-def call_stored_procedure():
+def call_stored_procedure(id, difficulty, higher_lower):
     connection, cursor = connect_to_database()
 
     if connection and cursor:
         try:
             # Execute a stored procedure
-            cursor.callproc('get_computer_choice', (6, 'Hard','Higher'))  # Replace with actual parameters
+            cursor.callproc('get_computer_choice', (id, difficulty, higher_lower))  # Replace with actual parameters
 
             # Fetch the results if the stored procedure returns any
             results = cursor.fetchall()
-            print("Results of the stored procedure:", results)
+            # Get the string value out of the tuple
+            if results:
+                actual_value = results[0]
+                if isinstance(actual_value, tuple):
+                    actual_value = actual_value[0]
+
+            return actual_value
 
         except (Exception, psycopg2.Error) as error:
             print("Error calling the stored procedure:", error)
@@ -48,5 +54,5 @@ if __name__ == "__main__":
 
     # Example: Call a stored procedure
     # call_stored_procedure()
-    call_stored_procedure()
+    print(call_stored_procedure(22,'Easy', 'Higher'))
     

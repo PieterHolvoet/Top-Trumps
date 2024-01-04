@@ -10,8 +10,11 @@ import os
 
 
 path_MinecraftRegular = os.path.join("Top-Trumps2","assets", "fonts", "MinecraftRegular-Bmg3.otf")
+path_MinecraftRegular_V2 = "../assets/fonts/MinecraftRegular-Bmg3.otf"
 path_start_screen = os.path.join("Top-Trumps2","assets","fotos","start_screen.jpg")
+path_start_screen_V2 = "../assets/fotos/start_screen.jpg"
 path_dierencsv = os.path.join("Top-Trumps2","assets","Dieren_TopTrumps.csv")
+path_dierencsv_V2 = "../assets/Dieren_TopTrumps.csv"
 
 
 
@@ -22,8 +25,8 @@ WIDTH = 800
 HEIGHT = 800
 
 
-FONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH//40))
-GROOTFONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH//10))
+FONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH//40))
+GROOTFONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH//10))
 
 # Colors
 BLACK = (0, 0, 0)
@@ -34,7 +37,7 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-startscreen = pygame.image.load(path_start_screen)
+startscreen = pygame.image.load(path_start_screen_V2)
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
 
@@ -123,7 +126,7 @@ def get_selected_number(kaart, hoger_lager):
 
 
 DECK_DIEREN_CSV = []
-with open(path_dierencsv, 'r') as csv_bestand:
+with open(path_dierencsv_V2, 'r') as csv_bestand:
     csv_lezer = csv.reader(csv_bestand)
     header = next(csv_lezer)
     attr1, attr2, attr3, attr4 = header[1], header[2], header[3], header[4]

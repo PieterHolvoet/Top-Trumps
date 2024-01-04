@@ -2,9 +2,11 @@ import pygame
 import random
 import csv
 import mekanics.game_mekanics
+import os
+path_mcregular = os.path.join("Top-Trumps2", "assets", "fonts", "MinecraftRegular-Bmg3.otf")
 
 pygame.init()
-FONT = pygame.font.Font('Top-Trumps2/assets/fonts/MinecraftRegular-Bmg3.otf', 20)
+FONT = pygame.font.Font(path_mcregular, 20)
 
 # # Minecraft Font :)
 # FONT = pygame.FONT.Font('./fonts/MinecraftRegular-Bmg3.otf', 20)

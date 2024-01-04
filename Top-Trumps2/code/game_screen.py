@@ -1,4 +1,6 @@
 import pygame
+import os
+
 
 pygame.init()
 
@@ -6,10 +8,12 @@ FPS = 60
 WIDTH = 800
 HEIGHT = 800
 
+path_MinecraftRegular = os.path.join("Top-Trumps2", "assets", "fonts", "MinecraftRegular-Bmg3.otf")
+
 # Minecraft Font :)
-FONT = pygame.font.Font('Top-Trumps2/assets/fonts/MinecraftRegular-Bmg3.otf', int(WIDTH // 40))
-MEDIUMFONT = pygame.font.Font('Top-Trumps2/assets/fonts/MinecraftRegular-Bmg3.otf', int(WIDTH // 17.4))
-GROOTFONT = pygame.font.Font('Top-Trumps2/assets/fonts/MinecraftRegular-Bmg3.otf', int(WIDTH // 10))
+FONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH // 40))
+MEDIUMFONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH // 17.4))
+GROOTFONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH // 10))
 
 # Colors
 BLACK = (0, 0, 0)
@@ -19,24 +23,29 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 
 # Set up display
+path_start_screen = os.path.join("Top-Trumps2", "assets", "fotos", "start_screen.jpg")
+path_background = os.path.join("Top-Trumps2", "assets", "fotos", "background_topTrumps.JPG")
+path_voorkant = os.path.join("Top-Trumps2", "assets", "fotos", "voorkant_kaart.jpg")
+path_achterkant = os.path.join("Top-Trumps2", "assets", "fotos", "achterkant_kaart.jpg")
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-startscreen = pygame.image.load("Top-Trumps2/assets/fotos/start_screen.jpg")
+startscreen = pygame.image.load(path_start_screen)
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
-background = pygame.image.load("Top-Trumps2/assets/fotos/background_topTrumps.JPG")
+background = pygame.image.load(path_background)
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
-ttFront = pygame.image.load('Top-Trumps2/assets/fotos/voorkant_kaart.jpg')
+ttFront = pygame.image.load(path_voorkant)
 ttFront = pygame.transform.scale(ttFront, (WIDTH // 3.333, HEIGHT // 2.5))
 
-ttBack = pygame.image.load('Top-Trumps2/assets/fotos/achterkant_kaart.jpg')
+ttBack = pygame.image.load(path_achterkant)
 ttBack = pygame.transform.rotate(ttBack, 180)
 ttBack = pygame.transform.scale(ttBack, (WIDTH // 3.333, HEIGHT // 2.5))
 
+path_animalcards = os.path.join("Top-Trumps2", "assets", "fotos","animal_cards", "start_screen.jpg")
 
 def display_in_a_match(card, hoger_lager):
     x1, x2 = WIDTH // 2.025, WIDTH // 1.616

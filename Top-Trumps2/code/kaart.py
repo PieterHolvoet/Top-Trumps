@@ -1,5 +1,5 @@
 import csv
-
+import os
 
 class Kaart:
     def __init__(self, naam, attr_list):
@@ -30,8 +30,10 @@ class Kaart:
 # Is niet meer nodig wegens uit database halen.     (maar was simpel en beter om hier te doen, klein algoritme)
 # PS:: Moet nog gefixt worden
 #
+path_dierencsv = os.path.join("Top-Trumps2", "assets", "Dieren_TopTrumps.csv")
+
 DECK_DIEREN_CSV = []
-with open('Top-Trumps2/assets/Dieren_TopTrumps.csv', 'r') as csv_bestand:
+with open(path_dierencsv, 'r') as csv_bestand:
     csv_lezer = csv.reader(csv_bestand)
     header = next(csv_lezer)
     attr1, attr2, attr3, attr4 = header[1], header[2], header[3], header[4]

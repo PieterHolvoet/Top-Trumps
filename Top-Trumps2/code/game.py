@@ -3,10 +3,16 @@ import sys
 import pygame
 import random
 import math
+import os
 
 pygame.init()
 
 FPS = 60
+
+path_ttgame = os.path.join("Top-Trumps2", "assets", "fotos", "TTGame.jpg")
+path_ttfront = os.path.join("Top-Trumps2", "assets", "fotos", "TTFrontCard.jpg")
+path_ttback = os.path.join("Top-Trumps2", "assets", "fotos", "TTBackCard.jpg")
+
 
 # Set up display
 width, height = 800, 800
@@ -14,13 +20,13 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-game_bg = pygame.image.load('Top-Trumps2/assets/fotos/TTGame.jpg')
+game_bg = pygame.image.load(path_ttgame)
 game_bg = pygame.transform.scale(game_bg, (width + 80, height + 80))
 
-ttFront = pygame.image.load('Top-Trumps2/assets/fotos/TTFrontCard.jpg')
+ttFront = pygame.image.load(path_ttfront)
 ttFront = pygame.transform.scale(ttFront, (240, 320))
 
-ttBack = pygame.image.load('Top-Trumps2/assets/fotos/TTBackCard.jpg')
+ttBack = pygame.image.load(path_ttback)
 ttBack = pygame.transform.rotate(ttBack, 180)
 ttBack = pygame.transform.scale(ttBack, (240, 320))
 
@@ -35,7 +41,8 @@ kleur3 = (222, 186, 111)
 kleur4 = (130, 48, 56)
 benazwart = (43, 43, 43)
 
-font = pygame.font.Font('Top-Trumps2/assets/fonts/MinecraftRegular-Bmg3.otf', 20)
+path_mcregular = os.path.join("Top-Trumps2", "assets", "fonts", "MinecraftRegular-Bmg3.otf")
+font = pygame.font.Font(path_mcregular, 20)
 
 
 def game_loop():

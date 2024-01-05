@@ -52,7 +52,8 @@ ttBack = pygame.transform.scale(ttBack, (WIDTH // 3.333, HEIGHT // 2.5))
 
 path_animalcards = os.path.join("Top-Trumps2", "assets", "fotos","animal_cards", "start_screen.jpg")
 
-def display_in_a_match(card, hoger_lager):
+def display_in_a_match(card, hoger_lager, aantal_player_kaarten):
+    player_kaarten = f"{aantal_player_kaarten}"
     x1, x2 = WIDTH // 2.025, WIDTH // 1.616
     ylist = [HEIGHT // 1.161, HEIGHT // 1.117, HEIGHT // 1.0796, HEIGHT // 1.0376]
     screen.blit(background, (0, 0 - HEIGHT * 0.02))
@@ -80,6 +81,9 @@ def display_in_a_match(card, hoger_lager):
         x_offset = len(attr_value) * WIDTH // 72.727
         screen.blit(attr_surface,
                     ((WIDTH // 2) + (WIDTH // 8) - x_offset, HEIGHT * (0.83 + (i * 0.035))))
+    player_aantal = FONT.render(player_kaarten, True, WHITE)
+    screen.blit(player_aantal, ((WIDTH // 2) + (WIDTH // 15), HEIGHT * 0.625))
+
     pygame.display.flip()
 
 
@@ -88,7 +92,7 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren, player_aantal, c
     player_kaarten = f"{player_aantal}"
     com_kaarten = f"{com_aantal}"
     keuze = f"{choice}"
-    display_in_a_match(player_kaart, hoger_lager)
+    display_in_a_match(player_kaart, hoger_lager, player_aantal)
     x1, x2, y1, y2 = WIDTH // 3.2, WIDTH // 1.454, HEIGHT // 2.424, HEIGHT // 1.7
     while running:
         for event in pygame.event.get():
@@ -127,10 +131,11 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren, player_aantal, c
         next = GROOTFONT.render("Verder", True, WHITE)
         screen.blit(next, (WIDTH // 2 - WIDTH // 6.145, HEIGHT // 2 - HEIGHT // 20))
         screen.blit(gewonnen_verloren_txt, (WIDTH * 0.72, HEIGHT * 0.01))
-        player_aantal = FONT.render(player_kaarten, True, WHITE)
+        # player_aantal = FONT.render(player_kaarten, True, WHITE)
         com_aantal = FONT.render(com_kaarten, True, WHITE)
         screen.blit(com_aantal, ((WIDTH // 2) + (WIDTH // 15), HEIGHT * 0.025))
-        screen.blit(player_aantal, ((WIDTH // 2) + (WIDTH // 15), HEIGHT * 0.625))
+        # screen.blit(player_aantal, ((WIDTH // 2) + (WIDTH // 15), HEIGHT * 0.625))
+
         keuzeTekst = GROOTFONT.render(keuze, True, WHITE)
         screen.blit(keuzeTekst, (WIDTH * 0.86, HEIGHT // 2 - HEIGHT // 20))
         pygame.display.flip()
@@ -166,14 +171,14 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren, player_aantal, c
 #         pygame.time.Clock().tick(FPS)
 
 
-def timer_clock(timer_seconds, kaart, hoger_lager):
+def timer_clock(timer_seconds, kaart, hoger_lager, player_aantal):
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         # sc.fill(BLACK)
-        display_in_a_match(kaart, hoger_lager)
+        display_in_a_match(kaart, hoger_lager, player_aantal)
         timer_text = GROOTFONT.render(str(timer_seconds), True, WHITE)
         text_rect = timer_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
         screen.blit(timer_text, text_rect)

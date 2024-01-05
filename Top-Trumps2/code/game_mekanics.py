@@ -105,7 +105,7 @@ def get_selected_number(kaart, hoger_lager):
         if selected_number is not None:
             print(selected_number)
             return selected_number
-        screen.display_in_a_match(kaart, hoger_lager)
+        screen.display_in_a_match(kaart, hoger_lager, len(player.deck))
         # Draw the timer text
         timer_text = GROOTFONT.render(str(timer_seconds), True, WHITE)
         text_rect = timer_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
@@ -134,7 +134,7 @@ with open(path_dierencsv_V2, 'r') as csv_bestand:
         attr_lijst = [float(rij[1]), float(rij[2]), float(rij[3]), float(rij[4])]
         dier = card.Kaart(rij[0], attr_lijst)
         DECK_DIEREN_CSV.append(dier)
-random.seed(101)
+random.seed(1)
 random.shuffle(DECK_DIEREN_CSV)
 deck1 = []
 deck2 = []
@@ -150,30 +150,12 @@ def game_loop():
         bonus_stapel = []
         boolean = True
         while boolean:
-            hoger_lager = (random.randint(1, 100) % 2 == 0)  # EVEN == HOGER
-            player_kaart = player.pak_bovenste_kaart()
-            com_kaart = com.pak_bovenste_kaart()
-            screen.display_in_a_match(player_kaart, hoger_lager)
-            keuze = get_selected_number(player_kaart, hoger_lager)
-            if player_kaart.isgelijk(com_kaart, keuze):
-                bonus_stapel.append(player_kaart)
-                bonus_stapel.append(com_kaart)
-                player.kaart_verwijderen_deck(player_kaart)
-                com.kaart_verwijderen_deck(com_kaart)
-                screen.won_lost_screen(player_kaart, com_kaart, 0, len(player.deck), len(com.deck), hoger_lager, keuze)
-                continue
-            gewonnen = player.battle_andere_speler(com, keuze, bonus_stapel, hoger_lager)
-            screen.won_lost_screen(player_kaart, com_kaart, gewonnen, len(player.deck), len(com.deck), hoger_lager, keuze)
-            boolean = False
-        if player.is_niet_einde(com):
-            bonus_stapel = []
-            boolean = True
-            while boolean:
+            if player.is_niet_einde(com):
                 hoger_lager = (random.randint(1, 100) % 2 == 0)  # EVEN == HOGER
                 player_kaart = player.pak_bovenste_kaart()
                 com_kaart = com.pak_bovenste_kaart()
-                screen.display_in_a_match(player_kaart, hoger_lager)
-                keuze = card.rank_kaart_attr(com_kaart, hoger_lager)
+                screen.display_in_a_match(player_kaart, hoger_lager, len(player.deck))
+                keuze = get_selected_number(player_kaart, hoger_lager)
                 if player_kaart.isgelijk(com_kaart, keuze):
                     bonus_stapel.append(player_kaart)
                     bonus_stapel.append(com_kaart)
@@ -181,9 +163,34 @@ def game_loop():
                     com.kaart_verwijderen_deck(com_kaart)
                     screen.won_lost_screen(player_kaart, com_kaart, 0, len(player.deck), len(com.deck), hoger_lager, keuze)
                     continue
-                screen.timer_clock(5, player_kaart, hoger_lager)
                 gewonnen = player.battle_andere_speler(com, keuze, bonus_stapel, hoger_lager)
+                bonus_stapel = []
                 screen.won_lost_screen(player_kaart, com_kaart, gewonnen, len(player.deck), len(com.deck), hoger_lager, keuze)
+                if gewonnen == 1:
+                    continue
+                boolean = False
+        bonus_stapel = []
+        boolean = True
+        while boolean:
+            if player.is_niet_einde(com):
+                hoger_lager = (random.randint(1, 100) % 2 == 0)  # EVEN == HOGER
+                player_kaart = player.pak_bovenste_kaart()
+                com_kaart = com.pak_bovenste_kaart()
+                screen.display_in_a_match(player_kaart, hoger_lager, len(player.deck))
+                keuze = card.rank_kaart_attr(com_kaart, hoger_lager)
+                screen.timer_clock(5, player_kaart, hoger_lager, len(player.deck))
+                if player_kaart.isgelijk(com_kaart, keuze):
+                    bonus_stapel.append(player_kaart)
+                    bonus_stapel.append(com_kaart)
+                    player.kaart_verwijderen_deck(player_kaart)
+                    com.kaart_verwijderen_deck(com_kaart)
+                    screen.won_lost_screen(player_kaart, com_kaart, 0, len(player.deck), len(com.deck), hoger_lager, keuze)
+                    continue
+                gewonnen = player.battle_andere_speler(com, keuze, bonus_stapel, hoger_lager)
+                bonus_stapel = []
+                screen.won_lost_screen(player_kaart, com_kaart, gewonnen, len(player.deck), len(com.deck), hoger_lager, keuze)
+                if gewonnen == -1:
+                    continue
                 boolean = False
 
 

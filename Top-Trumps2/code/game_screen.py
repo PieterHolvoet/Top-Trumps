@@ -12,9 +12,9 @@ path_MinecraftRegular = os.path.join("Top-Trumps2", "assets", "fonts", "Minecraf
 path_MinecraftRegular_V2 = "../assets/fonts/MinecraftRegular-Bmg3.otf"
 
 # Minecraft Font :)
-FONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH // 40))
-MEDIUMFONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH // 17.4))
-GROOTFONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH // 10))
+FONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH // 40))
+MEDIUMFONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH // 17.4))
+GROOTFONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH // 10))
 
 # Colors
 BLACK = (0, 0, 0)
@@ -37,16 +37,16 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-startscreen = pygame.image.load(path_start_screen_V2)
+startscreen = pygame.image.load(path_start_screen)
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
-background = pygame.image.load(path_background_V2)
+background = pygame.image.load(path_background)
 background = pygame.transform.scale(background, (WIDTH, HEIGHT + 20))
 
-ttFront = pygame.image.load(path_voorkant_V2)
+ttFront = pygame.image.load(path_voorkant)
 ttFront = pygame.transform.scale(ttFront, (WIDTH // 3.333, HEIGHT // 2.5))
 
-ttBack = pygame.image.load(path_achterkant_V2)
+ttBack = pygame.image.load(path_achterkant)
 ttBack = pygame.transform.rotate(ttBack, 180)
 ttBack = pygame.transform.scale(ttBack, (WIDTH // 3.333, HEIGHT // 2.5))
 
@@ -59,7 +59,7 @@ def display_in_a_match(card, hoger_lager, aantal_player_kaarten):
     screen.blit(background, (0, 0 - HEIGHT * 0.02))
     screen.blit(ttFront, ((WIDTH // 2) - (ttFront.get_width() // 2), HEIGHT - ttFront.get_height()))
     screen.blit(ttBack, ((WIDTH // 2) - (ttBack.get_width() // 2), 0))
-    image = pygame.image.load(f"../assets/fotos/animals_cards/{card.naam}.JPG")
+    image = pygame.image.load(f"Top-Trumps2/assets/fotos/animals_cards/{card.naam}.JPG")
     image = pygame.transform.scale(image, (WIDTH // 4.4, HEIGHT // 6.7))
     screen.blit(image, (WIDTH // 2.556, HEIGHT // 1.48))
     for y in ylist:
@@ -109,7 +109,7 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren, player_aantal, c
 
         name_text = FONT.render(com_kaart.naam, True, WHITE)
         screen.blit(name_text, (WIDTH // 2 - (WIDTH // 10.666), HEIGHT * 0.04))
-        image = pygame.image.load(f"../assets/fotos/animals_cards/{com_kaart.naam}.JPG")
+        image = pygame.image.load(f"Top-Trumps2/assets/fotos/animals_cards/{com_kaart.naam}.JPG")
         image = pygame.transform.scale(image, (WIDTH // 4.4, HEIGHT // 6.7))
         screen.blit(image, (WIDTH // 2.556, HEIGHT // 14.545))
         for i in range(4):

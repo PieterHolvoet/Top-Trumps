@@ -13,10 +13,10 @@ import psycopg2
 #geluid
 path_music = os.path.join("Top-Trumps2","assets", "geluid", "music.mp3")
 path_music_v2 = "../assets/geluid/music.mp3"
-pygame.mixer.music.load(path_music_v2)
+pygame.mixer.music.load(path_music)
 pygame.mixer.music.play(-1)
 #######
-path_eind_screen = os.path.join("Top-Trumps2","assets","fotos","eind_screen")
+path_eind_screen = os.path.join("Top-Trumps2","assets","fotos","eind_screen.jpg")
 path_eind_screen_V2 = "../assets/fotos/eind_screen.jpg"
 #######
 
@@ -26,7 +26,8 @@ path_start_screen = os.path.join("Top-Trumps2","assets","fotos","start_screen.jp
 path_start_screen_V2 = "../assets/fotos/start_screen.jpg"
 path_dierencsv = os.path.join("Top-Trumps2","assets","Dieren_TopTrumps.csv")
 path_dierencsv_V2 = "../assets/Dieren_TopTrumps.csv"
-
+path_MinecraftBoldItalic = os.path.join("Top-Trumps2","assets","fonts", "MinecraftBold-nMK1.otf")
+path_MinecraftBoldItalic_V2 = "../assets/fonts/MinecraftBoldItalic-1y1e.otf"
 
 
 
@@ -36,8 +37,9 @@ WIDTH = 800
 HEIGHT = 800
 
 
-FONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH//40))
-GROOTFONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH//10))
+FONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH//40))
+FONTSPELUITLEG = pygame.font.Font(path_MinecraftBoldItalic, int(WIDTH//45))
+GROOTFONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH//10))
 
 # Colors
 BLACK = (0, 0, 0)
@@ -48,11 +50,25 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-startscreen = pygame.image.load(path_start_screen_V2)
+startscreen = pygame.image.load(path_start_screen)
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
 
+speluitleg_tekst = "Spelregels: Versla je tegenstander door alle"
+speluitleg_tekst2 = "kaarten van het spel te bemachtigen! Wanneer"
+speluitleg_tekst3 = "het jouw beurt is, kijk dan goed of het een"
+speluitleg_tekst4 = "hoge of lage ronde is. Kies vervolgens de"
+speluitleg_tekst5 = "eigenschap van jouw dier waarvan je denkt"
+speluitleg_tekst6 = "dat deze hoger / lager is dan die van jouw"
+speluitleg_tekst7 = "tegenstander. De ronde winnaar blijft aan"
+speluitleg_tekst8 = "beurt en krijgt alle gespeelde kaarten."
+speluitleg_tekst9 = "Leer zo alle dieren kennen om optimale"
+speluitleg_tekst10= "keuzes te maken en te winnen tegen een"
+speluitleg_tekst11= "makkelijke, gemiddelde of moeilijke tegenstander."
+
+
 def start_screen():
+    pygame.init()
     x1, x2 = WIDTH // 2.8, WIDTH // 1.5
     y1, y2 = HEIGHT // 1.5625, HEIGHT // 1.4
     running = True
@@ -74,8 +90,39 @@ def start_screen():
                 if x1 <= mouse_x <= x2 and y1 <= mouse_y <= y2:
                     running = False
                     game_loop()
-        # Draw background
+        # Draw background and text
+                    
         sc.blit(startscreen, (0, 0))
+
+        # text speluitleg
+        text = FONTSPELUITLEG.render(speluitleg_tekst, True, (0, 0, 0))  # Adjust color as needed
+        sc.blit(text, (140,220))
+        text2 = FONTSPELUITLEG.render(speluitleg_tekst2, True, (0, 0, 0))
+        sc.blit(text2,(140,240))
+        text3 = FONTSPELUITLEG.render(speluitleg_tekst3, True, (0, 0, 0))
+        sc.blit(text3,(140,260))
+        text4 = FONTSPELUITLEG.render(speluitleg_tekst4, True, (0, 0, 0))
+        sc.blit(text4,(140,280))
+        text5 = FONTSPELUITLEG.render(speluitleg_tekst5, True, (0, 0, 0))
+        sc.blit(text5,(140,300))
+        text6 = FONTSPELUITLEG.render(speluitleg_tekst6, True, (0, 0, 0))
+        sc.blit(text6,(140,320))
+        text7 = FONTSPELUITLEG.render(speluitleg_tekst7, True, (0, 0, 0))
+        sc.blit(text7,(140,340))
+        text8 = FONTSPELUITLEG.render(speluitleg_tekst8, True, (0, 0, 0))
+        sc.blit(text8,(140,360))
+        text9 = FONTSPELUITLEG.render(speluitleg_tekst9, True, (0, 0, 0))
+        sc.blit(text9,(140,380))
+        text10 = FONTSPELUITLEG.render(speluitleg_tekst10, True, (0, 0, 0))
+        sc.blit(text10,(140,400))
+        text11 = FONTSPELUITLEG.render(speluitleg_tekst11, True, (0, 0, 0))
+        sc.blit(text11,(140,420))
+
+        # if com.aantal_kaarten == 30 or player.aantal_kaarten == 30:
+        #     end_image = pygame.image.load(path_eind_screen)
+        #     sc.blit(end_image,(0,0))
+        
+
         pygame.display.flip()
         pygame.time.Clock().tick(FPS)
 
@@ -136,7 +183,7 @@ def get_selected_number(kaart, hoger_lager):
 
 
 DECK_DIEREN_CSV = []
-with open(path_dierencsv_V2, 'r') as csv_bestand:
+with open(path_dierencsv, 'r') as csv_bestand:
     csv_lezer = csv.reader(csv_bestand)
     header = next(csv_lezer)
     attr1, attr2, attr3, attr4 = header[1], header[2], header[3], header[4]
@@ -296,6 +343,7 @@ def game_loop():
                     continue
 
                 boolean = False
+                
 
 
 

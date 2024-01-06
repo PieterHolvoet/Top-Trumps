@@ -124,7 +124,7 @@ def get_selected_number(kaart, hoger_lager):
 
         # Check if the timer has reached 0
         if timer_seconds < 0:
-            return card.rank_kaart_attr(kaart, hoger_lager)
+            return random.randint(1,4)
 
 
 DECK_DIEREN_CSV = []

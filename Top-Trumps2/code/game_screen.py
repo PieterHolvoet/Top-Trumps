@@ -41,7 +41,7 @@ startscreen = pygame.image.load(path_start_screen)
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
 background = pygame.image.load(path_background)
-background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+background = pygame.transform.scale(background, (WIDTH, HEIGHT + 20))
 
 ttFront = pygame.image.load(path_voorkant)
 ttFront = pygame.transform.scale(ttFront, (WIDTH // 3.333, HEIGHT // 2.5))

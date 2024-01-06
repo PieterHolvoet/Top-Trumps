@@ -1,5 +1,16 @@
-CREATE OR REPLACE FUNCTION get_computer_choice(p_id INTEGER, p_difficulty VARCHAR, p_round_type VARCHAR)
-RETURNS VARCHAR AS $$
+-- FUNCTION: public.get_computer_choice(integer, character varying, character varying)
+
+-- DROP FUNCTION IF EXISTS public.get_computer_choice(integer, character varying, character varying);
+
+CREATE OR REPLACE FUNCTION public.get_computer_choice(
+	p_id integer,
+	p_difficulty character varying,
+	p_round_type character varying)
+    RETURNS character varying
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
 DECLARE
     choice_column VARCHAR;
     result_value VARCHAR;
@@ -34,4 +45,7 @@ BEGIN
     -- Return the result without brackets
     RETURN result_value;
 END;
-$$ LANGUAGE plpgsql;
+$BODY$;
+
+ALTER FUNCTION public.get_computer_choice(integer, character varying, character varying)
+    OWNER TO postgres;

@@ -7,6 +7,8 @@ import game_screen as screen
 import kaart as card
 import player as pl
 import os
+import psycopg2
+
 
 
 path_MinecraftRegular = os.path.join("Top-Trumps2","assets", "fonts", "MinecraftRegular-Bmg3.otf")
@@ -25,8 +27,8 @@ WIDTH = 800
 HEIGHT = 800
 
 
-FONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH//40))
-GROOTFONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH//10))
+FONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH//40))
+GROOTFONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH//10))
 
 # Colors
 BLACK = (0, 0, 0)
@@ -37,7 +39,7 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-startscreen = pygame.image.load(path_start_screen_V2)
+startscreen = pygame.image.load(path_start_screen)
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
 
@@ -126,7 +128,7 @@ def get_selected_number(kaart, hoger_lager):
 
 
 DECK_DIEREN_CSV = []
-with open(path_dierencsv_V2, 'r') as csv_bestand:
+with open(path_dierencsv, 'r') as csv_bestand:
     csv_lezer = csv.reader(csv_bestand)
     header = next(csv_lezer)
     attr1, attr2, attr3, attr4 = header[1], header[2], header[3], header[4]
@@ -144,6 +146,90 @@ for i in range(15):
 player = pl.Player(deck1)
 com = pl.Player(deck2)
 
+
+#Stored-procedure sectie
+# Update these variables with your PostgreSQL database credentials
+db_credentials = {
+    'host': 'localhost',
+    'database': 'Toptrumpsdb',
+    'user': 'postgres',
+    'password': 'wachtwoord',
+    'port': '5432',  # Default is 5432
+}
+
+def connect_to_database():
+    try:
+        # Establish a connection to the PostgreSQL database
+        connection = psycopg2.connect(**db_credentials)
+        cursor = connection.cursor()
+        return connection, cursor
+
+    except (Exception, psycopg2.Error) as error:
+        print("Error connecting to PostgreSQL database:", error)
+        return None, None
+
+
+def call_stored_procedure(id, difficulty, higher_lower):
+    connection, cursor = connect_to_database()
+
+    if connection and cursor:
+        try:
+            # Execute a stored procedure
+            cursor.callproc('get_computer_choice', (id, difficulty, higher_lower))  # Replace with actual parameters
+
+            # Fetch the results if the stored procedure returns any
+            results = cursor.fetchall()
+            # Get the string value out of the tuple
+            if results:
+                actual_value = results[0]
+                if isinstance(actual_value, tuple):
+                    actual_value = actual_value[0]
+                attribute_dict = {"Speed":1, "Weight":2, "Beauty":3, "Killer Instinct": 4}
+
+
+            return attribute_dict.get(actual_value)
+
+        except (Exception, psycopg2.Error) as error:
+            print("Error calling the stored procedure:", error)
+
+        finally:
+            # Close the cursor and connection
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed.")
+
+animal_dict = {
+'Leeuw':1,
+'Haai':2,
+'Olifant':3,
+'Bidsprinkhaan':4,
+'Krokodil':5,
+'Neushoorn':6,
+'Panda':7,
+'Eekhoorn':8,
+'Zeearend':9,
+'Orca':10,
+'Mier':11,
+'Tijger':12,
+'Beer':13,
+'Ijsbeer':14,
+'Wolf':15,
+'Python':16,
+'Kraai':17,
+'Impala':18,
+'Schorpioen':19,
+'Octopus':20,
+'Siamese-kempvis':21,
+'Blobvis':22,
+'Gorilla':23,
+'Chimpanzee':24,
+'Eland':25,
+'Hyena':26,
+'Vos':27,
+'Mammoet':28,
+'Luiaard':29,
+'Pinguin':30
+}
 
 def game_loop():
     while player.is_niet_einde(com):
@@ -177,7 +263,14 @@ def game_loop():
                 player_kaart = player.pak_bovenste_kaart()
                 com_kaart = com.pak_bovenste_kaart()
                 screen.display_in_a_match(player_kaart, hoger_lager, len(player.deck))
-                keuze = card.rank_kaart_attr(com_kaart, hoger_lager)
+                game_difficulty = 'Easy'    # dit is voorlopig hard-coded op easy, wanneer start keuze scherm gemaakt is dan waarde aan deze variabele toeschrijven
+                print('com_kaart naam: ', com_kaart.naam)
+                comp_kaart = com_kaart.naam
+                comp_kaart_id = animal_dict.get(comp_kaart)
+                print('kaart id: ', comp_kaart_id)
+                keuze = call_stored_procedure(comp_kaart_id, game_difficulty, hoger_lager)
+                #keuze = card.rank_kaart_attr(com_kaart, hoger_lager)
+                print('keuze: ', keuze)
                 screen.timer_clock(5, player_kaart, hoger_lager, len(player.deck))
                 if player_kaart.isgelijk(com_kaart, keuze):
                     bonus_stapel.append(player_kaart)

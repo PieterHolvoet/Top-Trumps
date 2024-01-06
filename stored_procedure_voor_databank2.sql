@@ -1,11 +1,11 @@
--- FUNCTION: public.get_computer_choice(integer, character varying, character varying)
+-- FUNCTION: public.get_computer_choice(integer, character varying, boolean)
 
--- DROP FUNCTION IF EXISTS public.get_computer_choice(integer, character varying, character varying);
+-- DROP FUNCTION IF EXISTS public.get_computer_choice(integer, character varying, boolean);
 
 CREATE OR REPLACE FUNCTION public.get_computer_choice(
-	p_id integer,
-	p_difficulty character varying,
-	p_round_type character varying)
+    p_id integer,
+    p_difficulty character varying,
+    p_round_type boolean)
     RETURNS character varying
     LANGUAGE 'plpgsql'
     COST 100
@@ -17,20 +17,20 @@ DECLARE
 BEGIN
     -- Determine the column based on difficulty and round type
     IF p_difficulty = 'Easy' THEN
-        IF p_round_type = 'Higher' THEN
+        IF p_round_type = true THEN
             choice_column := 'HigherChoiceEasy';
         ELSE
             choice_column := 'LowerChoiceEasy';
         END IF;
     ELSIF p_difficulty = 'Medium' THEN
-        IF p_round_type = 'Higher' THEN
+        IF p_round_type = true THEN
             choice_column := 'HigherChoiceMedium';
         ELSE
             choice_column := 'LowerChoiceMedium';
         END IF;
     ELSE
         -- Assuming Hard mode
-        IF p_round_type = 'Higher' THEN
+        IF p_round_type = true THEN
             choice_column := 'HigherChoiceHard';
         ELSE
             choice_column := 'LowerChoiceHard';
@@ -47,5 +47,5 @@ BEGIN
 END;
 $BODY$;
 
-ALTER FUNCTION public.get_computer_choice(integer, character varying, character varying)
+ALTER FUNCTION public.get_computer_choice(integer, character varying, boolean)
     OWNER TO postgres;

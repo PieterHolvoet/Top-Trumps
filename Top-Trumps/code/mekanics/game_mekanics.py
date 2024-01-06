@@ -12,8 +12,8 @@ WIDTH = 800
 HEIGHT = 800
 
 
-FONT = pygame.font.Font('Top-Trumps/code/fonts/MinecraftRegular-Bmg3.otf', int(WIDTH//40))
-GROOTFONT = pygame.font.Font('Top-Trumps/code/fonts/MinecraftRegular-Bmg3.otf', int(WIDTH//10))
+FONT = pygame.font.Font('/Users/ridhakareem/Documents/GitHub/Top-Trumps/Top-Trumps/code/fonts/MinecraftRegular-Bmg3.otf', int(WIDTH//40))
+GROOTFONT = pygame.font.Font('/Users/ridhakareem/Documents/GitHub/Top-Trumps/Top-Trumps/code/fonts/MinecraftRegular-Bmg3.otf', int(WIDTH//10))
 
 # Colors
 BLACK = (0, 0, 0)
@@ -24,7 +24,7 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-startscreen = pygame.image.load("Top-Trumps/code/fotos/spel/start_screen.jpg")
+startscreen = pygame.image.load("/Users/ridhakareem/Documents/GitHub/Top-Trumps/Top-Trumps/code/fotos/spel/start_screen.jpg")
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
 
@@ -113,7 +113,7 @@ def get_selected_number(kaart, hoger_lager):
 
 
 DECK_DIEREN_CSV = []
-with open('Top-Trumps/code/Dieren_TopTrumps.csv', 'r') as csv_bestand:
+with open('/Users/ridhakareem/Documents/GitHub/Top-Trumps/Top-Trumps/code/Dieren_TopTrumps.csv', 'r') as csv_bestand:
     csv_lezer = csv.reader(csv_bestand)
     header = next(csv_lezer)
     attr1, attr2, attr3, attr4 = header[1], header[2], header[3], header[4]

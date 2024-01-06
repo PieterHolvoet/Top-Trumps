@@ -14,13 +14,13 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-game_bg = pygame.image.load('fotos/TTGame.jpg')
+game_bg = pygame.image.load('/Users/ridhakareem/Documents/GitHub/Top-Trumps/fotos/TTGame.jpg')
 game_bg = pygame.transform.scale(game_bg, (width + 80, height + 80))
 
-ttFront = pygame.image.load('fotos/TTFrontCard.jpg')
+ttFront = pygame.image.load('/Users/ridhakareem/Documents/GitHub/Top-Trumps/fotos/TTFrontCard.jpg')
 ttFront = pygame.transform.scale(ttFront, (240, 320))
 
-ttBack = pygame.image.load('fotos/TTBackCard.jpg')
+ttBack = pygame.image.load('/Users/ridhakareem/Documents/GitHub/Top-Trumps/fotos/TTBackCard.jpg')
 ttBack = pygame.transform.rotate(ttBack, 180)
 ttBack = pygame.transform.scale(ttBack, (240, 320))
 
@@ -35,7 +35,7 @@ kleur3 = (222, 186, 111)
 kleur4 = (130, 48, 56)
 benazwart = (43, 43, 43)
 
-font = pygame.font.Font('./fonts/MinecraftRegular-Bmg3.otf', 20)
+font = pygame.font.Font('/Users/ridhakareem/Documents/GitHub/Top-Trumps/fonts/MinecraftRegular-Bmg3.otf', 20)
 
 
 def game_loop():

@@ -10,6 +10,15 @@ import os
 import psycopg2
 
 
+#geluid
+path_music = os.path.join("Top-Trumps2","assets", "geluid", "music.mp3")
+path_music_v2 = "../assets/geluid/music.mp3"
+pygame.mixer.music.load(path_music_v2)
+pygame.mixer.music.play(-1)
+#######
+path_eind_screen = os.path.join("Top-Trumps2","assets","fotos","eind_screen")
+path_eind_screen_V2 = "../assets/fotos/eind_screen.jpg"
+#######
 
 path_MinecraftRegular = os.path.join("Top-Trumps2","assets", "fonts", "MinecraftRegular-Bmg3.otf")
 path_MinecraftRegular_V2 = "../assets/fonts/MinecraftRegular-Bmg3.otf"
@@ -27,8 +36,8 @@ WIDTH = 800
 HEIGHT = 800
 
 
-FONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH//40))
-GROOTFONT = pygame.font.Font(path_MinecraftRegular, int(WIDTH//10))
+FONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH//40))
+GROOTFONT = pygame.font.Font(path_MinecraftRegular_V2, int(WIDTH//10))
 
 # Colors
 BLACK = (0, 0, 0)
@@ -39,7 +48,7 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-startscreen = pygame.image.load(path_start_screen)
+startscreen = pygame.image.load(path_start_screen_V2)
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
 
@@ -69,7 +78,6 @@ def start_screen():
         sc.blit(startscreen, (0, 0))
         pygame.display.flip()
         pygame.time.Clock().tick(FPS)
-
 
 def get_selected_number(kaart, hoger_lager):
     selected_number = None
@@ -128,7 +136,7 @@ def get_selected_number(kaart, hoger_lager):
 
 
 DECK_DIEREN_CSV = []
-with open(path_dierencsv, 'r') as csv_bestand:
+with open(path_dierencsv_V2, 'r') as csv_bestand:
     csv_lezer = csv.reader(csv_bestand)
     header = next(csv_lezer)
     attr1, attr2, attr3, attr4 = header[1], header[2], header[3], header[4]
@@ -145,6 +153,7 @@ for i in range(15):
     deck2.append(DECK_DIEREN_CSV[i + 15])
 player = pl.Player(deck1)
 com = pl.Player(deck2)
+
 
 
 #Stored-procedure sectie
@@ -231,6 +240,7 @@ animal_dict = {
 'Pinguin':30
 }
 
+
 def game_loop():
     while player.is_niet_einde(com):
         bonus_stapel = []
@@ -284,7 +294,11 @@ def game_loop():
                 screen.won_lost_screen(player_kaart, com_kaart, gewonnen, len(player.deck), len(com.deck), hoger_lager, keuze)
                 if gewonnen == -1:
                     continue
+
                 boolean = False
 
 
+
 start_screen()
+
+

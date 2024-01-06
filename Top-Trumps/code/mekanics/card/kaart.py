@@ -31,7 +31,7 @@ class Kaart:
 # PS:: Moet nog gefixt worden
 #
 DECK_DIEREN_CSV = []
-with open('Top-Trumps/code/Dieren_TopTrumps.csv', 'r') as csv_bestand:
+with open('/Users/ridhakareem/Documents/GitHub/Top-Trumps/Dieren_TopTrumps.csv', 'r') as csv_bestand:
     csv_lezer = csv.reader(csv_bestand)
     header = next(csv_lezer)
     attr1, attr2, attr3, attr4 = header[1], header[2], header[3], header[4]

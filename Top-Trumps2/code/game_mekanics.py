@@ -279,7 +279,8 @@ def game_loop():
                 comp_kaart_id = animal_dict.get(comp_kaart)
                 print('kaart id: ', comp_kaart_id)
                 keuze = call_stored_procedure(comp_kaart_id, game_difficulty, hoger_lager)
-                #keuze = card.rank_kaart_attr(com_kaart, hoger_lager)
+                if keuze is None:
+                    keuze = card.rank_kaart_attr(com_kaart, hoger_lager)
                 print('keuze: ', keuze)
                 screen.timer_clock(5, player_kaart, hoger_lager, len(player.deck))
                 if player_kaart.isgelijk(com_kaart, keuze):

@@ -63,7 +63,7 @@ class Player:
                 return 1
 
     def is_niet_einde(self, other):
-        if self.deck and other.deck:
-            return True
-        else:
+        if len(self.deck) == 0 or len(other.deck) == 0:
             return False
+        else:
+            return True

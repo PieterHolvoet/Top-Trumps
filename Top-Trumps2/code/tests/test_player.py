@@ -1,4 +1,4 @@
-from pl.player import Player
+from ..player import Player
 import pytest
 
 @pytest.fixture

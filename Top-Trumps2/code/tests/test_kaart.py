@@ -1,5 +1,5 @@
 import pytest
-from kaart import Kaart
+from ..kaart import Kaart
 
 def test_kaart_initialization():
     kaart = Kaart("A", [1, 2, 3, 4])

@@ -1,7 +1,5 @@
 import pygame
 import os
-
-
 pygame.init()
 
 FPS = 60
@@ -153,38 +151,6 @@ def won_lost_screen(player_kaart, com_kaart, gewonnen_verloren, player_aantal, c
         pygame.display.flip()
 
 
-def end_screen():
-    x1, x2 = WIDTH // 2.8, WIDTH // 1.5
-    y1, y2 = HEIGHT // 1.5625, HEIGHT // 1.4
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    running = False
-                    # game_loop()  # Call the game loop function when Enter key is pressed
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                print(mouse_x)
-                print(mouse_y)
-                print()
-                if x1 <= mouse_x <= x2 and y1 <= mouse_y <= y2:
-                    running = False
-                    # game_loop()
-        # Draw background
-        screen.blit(endscreen, (0, 0))
-
-        start_text = GROOTFONT.render("Start", True, BLACK)
-        start_rect = start_text.get_rect((x1, y1))
-        screen.blit(start_text, start_rect)
-
-        # Update the display
-        pygame.display.flip()
-
-        # Cap the frame rate
-        pygame.time.Clock().tick(FPS)
 
 
 def timer_clock(timer_seconds, kaart, hoger_lager, player_aantal):

@@ -15,6 +15,7 @@ import psycopg2
 # path_eind_screen = os.path.join("Top-Trumps2","assets","fotos","eind_screen.jpg")
 # path_MinecraftRegular = os.path.join("Top-Trumps2","assets", "fonts", "MinecraftRegular-Bmg3.otf")
 # path_start_screen = os.path.join("Top-Trumps2","assets","fotos","start_screen.jpg")
+# path_eind_screen = os.path.join("Top-Trumps2", "assets", "fotos", "achterkant_kaart.jpg")
 # path_dierencsv = os.path.join("Top-Trumps2","assets","Dieren_TopTrumps.csv")
 # path_MinecraftBoldItalic = os.path.join("Top-Trumps2","assets","fonts", "MinecraftBold-nMK1.otf")
 
@@ -22,6 +23,7 @@ import psycopg2
 # Path Joren/Ridha
 path_MinecraftRegular = "../assets/fonts/MinecraftRegular-Bmg3.otf"
 path_start_screen = "../assets/fotos/start_screen.jpg"
+path_eind_screen = "../assets/fotos/eind_screen.jpg"
 path_dierencsv = "../assets/Dieren_TopTrumps.csv"
 path_MinecraftBoldItalic = "../assets/fonts/MinecraftBoldItalic-1y1e.otf"
 path_music = "../assets/geluid/music.mp3"
@@ -47,6 +49,7 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+GRAY = (169, 169, 169)
 
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
@@ -55,6 +58,8 @@ clock = pygame.time.Clock()
 startscreen = pygame.image.load(path_start_screen)
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
+endscreen = pygame.image.load(path_eind_screen)
+endscreen = pygame.transform.scale(endscreen, (WIDTH, HEIGHT))
 def start_screen():
     pygame.init()
     x1, x2 = WIDTH // 2.8, WIDTH // 1.5
@@ -90,7 +95,6 @@ def start_screen():
         screen.spel_uitleg()
         pygame.display.flip()
 
-
         # if com.aantal_kaarten == 30 or player.aantal_kaarten == 30:
         #     end_image = pygame.image.load(path_eind_screen)
         #     sc.blit(end_image,(0,0))
@@ -98,7 +102,7 @@ def start_screen():
         pygame.time.Clock().tick(FPS)
 
 
-def get_selected_number(kaart, hoger_lager):
+def get_selected_number(kaart, hoger_lager, len_player_kaarten):
     selected_number = None
     timer_seconds = 30
     x1, x2 = WIDTH // 2.666, WIDTH // 1.616
@@ -134,7 +138,7 @@ def get_selected_number(kaart, hoger_lager):
         if selected_number is not None:
             print(selected_number)
             return selected_number
-        screen.display_in_a_match(kaart, hoger_lager, len(player.deck))
+        screen.display_in_a_match(kaart, hoger_lager, len_player_kaarten)
         # Draw the timer text
         timer_text = GROOTFONT.render(str(timer_seconds), True, WHITE)
         text_rect = timer_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
@@ -163,15 +167,15 @@ with open(path_dierencsv, 'r') as csv_bestand:
         attr_lijst = [float(rij[1]), float(rij[2]), float(rij[3]), float(rij[4])]
         dier = card.Kaart(rij[0], attr_lijst)
         DECK_DIEREN_CSV.append(dier)
-random.seed(1)
-random.shuffle(DECK_DIEREN_CSV)
-deck1 = []
-deck2 = []
-for i in range(2):  # 15 standaard
-    deck1.append(DECK_DIEREN_CSV[i])
-    deck2.append(DECK_DIEREN_CSV[i + 15])
-player = pl.Player(deck1)
-com = pl.Player(deck2)
+# random.seed(1)
+# random.shuffle(DECK_DIEREN_CSV)
+# deck1 = []
+# deck2 = []
+# for i in range(2):  # 15 standaard
+#     deck1.append(DECK_DIEREN_CSV[i])
+#     deck2.append(DECK_DIEREN_CSV[i + 15])
+# player = pl.Player(deck1)
+# com = pl.Player(deck2)
 
 # Stored-procedure sectie
 # Update these variables with your PostgreSQL database credentials
@@ -260,6 +264,7 @@ animal_dict = {
 
 
 def game_loop(difficulty):
+    player, com = shuffle_deal()
     while player.is_niet_einde(com):
         bonus_stapel = []
         boolean = True
@@ -269,7 +274,7 @@ def game_loop(difficulty):
                 player_kaart = player.pak_bovenste_kaart()
                 com_kaart = com.pak_bovenste_kaart()
                 screen.display_in_a_match(player_kaart, hoger_lager, len(player.deck))
-                keuze = get_selected_number(player_kaart, hoger_lager)
+                keuze = get_selected_number(player_kaart, hoger_lager, len(player.deck))
                 if player_kaart.isgelijk(com_kaart, keuze):
                     bonus_stapel.append(player_kaart)
                     bonus_stapel.append(com_kaart)
@@ -284,7 +289,8 @@ def game_loop(difficulty):
                                        keuze)
                 if gewonnen == 1:
                     continue
-                boolean = False
+            boolean = False
+
         bonus_stapel = []
         boolean = True
         while boolean:
@@ -320,7 +326,77 @@ def game_loop(difficulty):
 
             boolean = False
     print("Einde")
-    screen.end_screen()
+    if len(player.deck) == 0:
+        speler_gewonnen = False
+    else:
+        speler_gewonnen = True
+    end_screen(speler_gewonnen)
+
+def shuffle_deal():
+    random.shuffle(DECK_DIEREN_CSV)
+    deck1 = []
+    deck2 = []
+    for i in range(2):  # 15 standaard
+        deck1.append(DECK_DIEREN_CSV[i])
+        deck2.append(DECK_DIEREN_CSV[i + 15])
+    player = pl.Player(deck1)
+    com = pl.Player(deck2)
+    return player, com
+def end_screen(speler_gewonnen):
+    box_width, box_height = 300, 80
+    box_width2, box_height2 = 400, 80
+    selected_difficulty = "Easy"
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    shuffle_deal()
+                    running = False
+                    game_loop(selected_difficulty)  # Call the game loop function when Enter key is pressed
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                print(mouse_x)
+                print(mouse_y)
+                print()
+                if (WIDTH-box_width)//2 <= mouse_x <= ((WIDTH-box_width)//2)+box_width and 400 <= mouse_y <= 400+box_height:
+                    shuffle_deal()
+                    running = False
+                    game_loop(selected_difficulty)
+                # Check if any difficulty box is clicked
+                difficulties = ["Easy", "Medium", "Hard"]
+                for i, difficulty in enumerate(difficulties):
+                    rect = pygame.Rect((WIDTH - 200) // 2, i * (50 + 20) + 580, 200, 50)
+                    if rect.collidepoint(event.pos):
+                        selected_difficulty = difficulty
+        # Draw background
+        sc.blit(endscreen, (0, 0))
+        screen.draw_difficulty_boxes(selected_difficulty)
+        rect_gewonnen = pygame.Rect((WIDTH-box_width2)//2, box_height2 + 100, box_width2, box_height2)
+        pygame.draw.rect(sc, GRAY, rect_gewonnen)
+        pygame.draw.rect(sc, BLACK, rect_gewonnen, 2)
+        if speler_gewonnen:
+            gewonnen_text = GROOTFONT.render("Gewonnen", True, GREEN)
+            gewonnen_rect = gewonnen_text.get_rect(center=rect_gewonnen.center)
+        else:
+            gewonnen_text = GROOTFONT.render("Verloren", True, RED)
+            gewonnen_rect = gewonnen_text.get_rect(center=rect_gewonnen.center)
+        sc.blit(gewonnen_text, gewonnen_rect)
+        rect_start = pygame.Rect((WIDTH - box_width) // 2, box_height + 300, box_width, box_height)
+        pygame.draw.rect(sc, GRAY, rect_start)
+        pygame.draw.rect(sc, BLACK, rect_start, 2)
+
+        start_text = GROOTFONT.render("Start", True, BLACK)
+        start_rect = start_text.get_rect(center=rect_start.center)
+        sc.blit(start_text, start_rect)
+
+        # Update the display
+        pygame.display.flip()
+
+        # Cap the frame rate
+        pygame.time.Clock().tick(FPS)
 
 
 start_screen()

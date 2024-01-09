@@ -35,7 +35,7 @@ kleur3 = (222, 186, 111)
 kleur4 = (130, 48, 56)
 benazwart = (43, 43, 43)
 
-font = pygame.font.Font('./fonts/MinecraftRegular-Bmg3.otf', 20)
+font = pygame.font.Font('fonts/MinecraftRegular-Bmg3.otf', 20)
 
 
 class Kaart:

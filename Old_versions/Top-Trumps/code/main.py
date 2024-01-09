@@ -1,10 +1,8 @@
 import pygame
-import random
-import csv
 import mekanics.game_mekanics
 
 pygame.init()
-FONT = pygame.font.Font('fonts/MinecraftRegular-Bmg3.otf', 20)
+FONT = pygame.font.Font('/Users/ridhakareem/Documents/GitHub/Top-Trumps/Top-Trumps/code/fonts/MinecraftRegular-Bmg3.otf', 20)
 
 # # Minecraft Font :)
 # FONT = pygame.FONT.Font('./fonts/MinecraftRegular-Bmg3.otf', 20)

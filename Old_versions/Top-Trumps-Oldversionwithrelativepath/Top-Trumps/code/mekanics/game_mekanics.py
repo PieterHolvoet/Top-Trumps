@@ -7,8 +7,8 @@ import screen.game_screen as screen
 import card.kaart as card
 import pl.player as pl
 
-FONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', 20)
-GROOTFONT = pygame.font.Font('.././fonts/MinecraftRegular-Bmg3.otf', 80)
+FONT = pygame.font.Font('../fonts/MinecraftRegular-Bmg3.otf', 20)
+GROOTFONT = pygame.font.Font('../fonts/MinecraftRegular-Bmg3.otf', 80)
 FPS = 60
 WIDTH = 800
 HEIGHT = 800
@@ -22,7 +22,7 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Top Trumps")
 clock = pygame.time.Clock()
 
-startscreen = pygame.image.load(".././fotos/spel/start_screen.jpg")
+startscreen = pygame.image.load("../fotos/spel/start_screen.jpg")
 startscreen = pygame.transform.scale(startscreen, (WIDTH, HEIGHT))
 
 
@@ -111,7 +111,7 @@ def get_selected_number(kaart, hoger_lager):
 
 
 DECK_DIEREN_CSV = []
-with open('.././Dieren_TopTrumps.csv', 'r') as csv_bestand:
+with open('../Dieren_TopTrumps.csv', 'r') as csv_bestand:
     csv_lezer = csv.reader(csv_bestand)
     header = next(csv_lezer)
     attr1, attr2, attr3, attr4 = header[1], header[2], header[3], header[4]
